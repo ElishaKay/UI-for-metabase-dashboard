@@ -1,0 +1,3 @@
+notes
+
+Consider saving all the user.id into user.client_id (this is how what I did in the passport.serialize function to fix the login bug)
