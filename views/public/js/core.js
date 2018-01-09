@@ -45,15 +45,52 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
 function mainController($scope, $http, $sce, $document){
 	
-
 	// Bar chart with chart js
-	$scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-  $scope.series = ['Series A', 'Series B'];
+	// $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+  	
+  	$scope.series = ['Invites', 'Followups'];
 
   $scope.data = [
     [65, 59, 80, 81, 56, 55, 40],
     [28, 48, 40, 19, 86, 27, 90]
   ];
+
+      $http.get('/api/messageStats')
+        .success(function(data) {
+            var datesArray = new Array;
+                for(var i in data) {
+                    datesArray.push(data[i].message_date);
+            };
+            console.log('this is the dates Array', datesArray);
+
+            $scope.labels = datesArray;
+            $scope.series = ['Invites', 'Followups'];
+            
+            $scope.stats = data;
+            
+            var invitesArray = new Array;
+                for(var i in data) {
+                    invitesArray.push(data[i].invites);
+            };
+            var followupsArray = new Array;
+                for(var i in data) {
+                    followupsArray.push(data[i].followups);
+            };
+            console.log('these are the stats',data);
+            console.log('This is the array with # of invites per day',invitesArray);
+            console.log('This is the array with # of followups per day',followupsArray);
+            
+            var combinedArray = [invitesArray, followupsArray];
+            console.log('this is the combinedArray',combinedArray);
+            
+            $scope.data = combinedArray;
+
+
+
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
 
 
 // Original controller below here:

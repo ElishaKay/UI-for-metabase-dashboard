@@ -49,17 +49,6 @@ module.exports = function(app,passport) {
 
 
 
-      // Get row for the logged in user (i.e. client)
-    app.get('/api/user',isLoggedIn,function(req,res){
-        var row = [];
-        connection.query('select * from client where client_id = ?',[req.user.client_id], function (err, rows) {
-            
-            res.json(rows);
-        });
-      
-    });
-
-
     // Get all campaigns
      app.get('/api/campaigns',isLoggedIn,function(req,res){
         var row = [];
@@ -83,7 +72,15 @@ module.exports = function(app,passport) {
     });
 
 
-
+    // Get all campaigns
+     app.get('/api/messageStats',isLoggedIn,function(req,res){
+        connection.query("select DATE_FORMAT(message.message_sent_date, '%M %d, %Y') as message_date, count(case when message_type = 'invite' then 1 else null end) as invites, count(case when message_type = 'message' then 1 else null end) as followups, count(case when message_type = 'second_message' then 1 else null end) as second_followups, count(case when message_type = 'response' then 1 else null end) as responses from client cl inner join campaign c on (c.client_id = cl.client_id) inner join user u on (u.client_id = c.client_id) inner join campaign_user cu on (u.user_id = cu.user_id and cu.campaign_id = c.campaign_id) inner join message as message on (u.user_id = message.user_id and message.campaign_id = cu.campaign_id) inner join receiver r on (r.receiver_id = message.receiver_id) where cl.client_analytics_code = ? and cl.client_analytics_code is not null group by date(message.message_sent_date), message.message_type",[req.user.client_analytics_code], function (err, rows) {
+            
+            res.json(rows);
+        });
+      
+    });
+  
 
     app.get('/api/todos',function(req,res){
         var row = [];
