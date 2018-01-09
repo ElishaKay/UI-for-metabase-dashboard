@@ -48,12 +48,12 @@ function mainController($scope, $http, $sce, $document){
 	// Bar chart with chart js
 	// $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
   	
-  	$scope.series = ['Invites', 'Followups'];
+  	$scope.series = ['Invites', 'Followups','Second_Followups','Responses'];
 
-  $scope.data = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
-  ];
+  // $scope.data = [
+  //   [65, 59, 80, 81, 56, 55, 40],
+  //   [28, 48, 40, 19, 86, 27, 90]
+  // ];
 
       $http.get('/api/messageStats')
         .success(function(data) {
@@ -64,7 +64,7 @@ function mainController($scope, $http, $sce, $document){
             console.log('this is the dates Array', datesArray);
 
             $scope.labels = datesArray;
-            $scope.series = ['Invites', 'Followups'];
+            $scope.series = ['Invites', 'Followups','Second_Followups','Responses'];
             
             $scope.stats = data;
             
@@ -76,11 +76,20 @@ function mainController($scope, $http, $sce, $document){
                 for(var i in data) {
                     followupsArray.push(data[i].followups);
             };
+            var second_followupsArray = new Array;
+                for(var i in data) {
+                    second_followupsArray.push(data[i].second_followups);
+            };
+            var responsesArray = new Array;
+                for(var i in data) {
+                    responsesArray.push(data[i].responses);
+            };
+
             console.log('these are the stats',data);
             console.log('This is the array with # of invites per day',invitesArray);
             console.log('This is the array with # of followups per day',followupsArray);
             
-            var combinedArray = [invitesArray, followupsArray];
+            var combinedArray = [invitesArray, followupsArray,second_followupsArray,responsesArray];
             console.log('this is the combinedArray',combinedArray);
             
             $scope.data = combinedArray;
