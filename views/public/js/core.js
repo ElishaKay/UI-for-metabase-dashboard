@@ -1,6 +1,6 @@
 // uncomment this line if the directive ends up working
 // var app = angular.module('GXLeads', ['app.directives']);
-var app = angular.module('GXLeads', ['ui.router']);
+var app = angular.module('GXLeads', ['ui.router', 'chart.js']);
 
 // Beginning of router
 
@@ -46,6 +46,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
 function mainController($scope, $http, $sce, $document){
 	
 
+	// Bar chart with chart js
+	$scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+  $scope.series = ['Series A', 'Series B'];
+
+  $scope.data = [
+    [65, 59, 80, 81, 56, 55, 40],
+    [28, 48, 40, 19, 86, 27, 90]
+  ];
 
 
 // Original controller below here:
