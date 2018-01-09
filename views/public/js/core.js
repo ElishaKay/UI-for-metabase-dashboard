@@ -6,32 +6,33 @@ var app = angular.module('GXLeads', ['ui.router', 'chart.js']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 
-  $urlRouterProvider.otherwise('/home/list');
+  $urlRouterProvider.otherwise('/home/stats');
   
   // First Page
   $stateProvider.state('home', {
     url: '/home',
-    templateUrl: 'partial-home.html'
-    // controller: 'MainCtrl'
+    templateUrl: 'ui-navbar.ejs'
   })
-  .state('home.list', {
-  	url: '/list',
-  	templateUrl: 'home-list.html',
+  .state('home.stats', {
+  	url: '/stats',
+  	templateUrl: 'stats.ejs',
+  	controller: 'statsController'
   })
-    .state('home.list2', {
-    url: '/list2',
-    templateUrl: 'home-list2.html',
+    .state('home.leads', {
+    url: '/leads',
+    templateUrl: 'leads.ejs',
   })
     .state('home.dashboard', {
     url: '/dashboard',
     templateUrl: 'dashboard.ejs',
+    controller: 'dashboardController'
   })
 });
 
 
 
-
-function mainController($scope, $http, $sce, $document){
+// function mainController($scope, $http, $sce, $document){
+function statsController($scope, $http, $sce, $document){
 	
       $http.get('/api/messageStats')
         .success(function(data) {
@@ -79,56 +80,22 @@ function mainController($scope, $http, $sce, $document){
             console.log('Error: ' + data);
         });
 
+};
 
-// Original controller below here:
-	$scope.formData = {};
 
-	$(function(){
+// app.controller('dashboardController', ['dropdownService', function (dropdownService, $scope, $http, $sce, $document){
+app.controller('dashboardController', function ($scope, $http, $sce, $document){	
+
+	// Creating the initial iframe on page load
+	 	$(function(){
     var $select = $(".1-100");
     // $select.prepend("<option value='allTime'>Always</option>");
     for (i=1;i<=100;i++){
      	   $select.append($("<option value='i'></option>").val(i).html("Last "+i+" Days"))
    		 }
-   		 
-	});
+   	});
 
-	// Hiç bir şeye basılmadığında yani direk site açılğında router.js içerisine direk get methoduna gidiyor . 
-	$http.get('/api/todos')
-		.success(function(data) {
-			$scope.gonderi = data;
-			console.log($scope.gonderi.length,'veri geldi')
-		})
-		.error(function(data) {
-			console.log('Error: ' + data);
-		});
-
-
-
-	$scope.createTodo = function() { 
-		$http.post('/api/todos', $scope.formData)
-			.success(function(data) {
-				$scope.formData = {}; // clear the form so our user is ready to enter another
-				$scope.gonderi = data;
-				console.log(data);
-			})
-			.error(function(data) {
-				console.log('Error: ' + data);
-			});
-	};
-	
-
-	// Creating the initial iframe on page load
-
-	var baseurl = 'https://meta-g.herokuapp.com/public/dashboard/7431c8e3-542e-4d21-a664-1abeccbac880';
-	// var baseurl = 'https://meta-g.herokuapp.com/public/question/b71f7fda-4dfd-419e-b4ff-1b3418d1c147'
-	var selectedCampaign = '';
-	var selectedUser = '';
-	var newurl = '';
-	var newesturl = '';
-	$scope.url = '';
-	
-
-	// Reset any or all of the 3 variable
+		// Reset any or all of the 3 variable
 	$scope.resetCampaign = function(){
         delete $scope.selectedCampaign;
 	};
@@ -140,6 +107,85 @@ function mainController($scope, $http, $sce, $document){
 	$scope.resetDay = function(){
         delete $scope.selectedDay;
 	};
+	$(function(){
+    var $select = $(".1-100");
+    // $select.prepend("<option value='allTime'>Always</option>");
+    for (i=1;i<=100;i++){
+     	   $select.append($("<option value='i'></option>").val(i).html("Last "+i+" Days"))
+   		 }
+   	});
+
+		// Reset any or all of the 3 variable
+	$scope.resetCampaign = function(){
+        delete $scope.selectedCampaign;
+	};
+
+	$scope.resetUser = function(){
+        delete $scope.selectedUser;
+	};	
+
+	$scope.resetDay = function(){
+        delete $scope.selectedDay;
+	};
+
+	// Populate client's campaigns in the dropdown
+	$http.get('/api/campaigns')
+		.success(function(data){
+			$scope.campaigns = data;
+			console.log('These are the camapaigns: ',data)
+		})
+		.error(function(data){
+	});
+
+	// Change the iframe based on the user's selected 'Past X Days'
+	$scope.daySelected = function() {
+		// var selectedUser = $scope.selectedUser;
+		console.log('you ran the daySelected function');
+		updateIframe();
+	};
+
+
+	// Change the iframe based on the user's selected LinkedIn user
+
+	$scope.userSelected = function() {
+		// var selectedUser = $scope.selectedUser;
+		console.log('you ran the userSelected function');
+		updateIframe();
+	};
+
+
+
+	// Change the iframe based on the user's selected campaigns
+
+	$scope.campaignSelected = function() {
+		  // var selectedCampaign = $scope.selectedCampaign;
+		  console.log('you ran the campaignSelected function');
+		  updateIframe();	       		
+	};
+
+	
+
+	// Populate client's LinkedIn users in the dropdown
+	$http.get('/api/users')
+		.success(function(data){
+			$scope.users = data;
+			console.log("hey from users function in core.js!")
+			console.log('These are the users: ',data)
+			})
+		.error(function(data){
+	});
+
+
+
+	var baseurl = 'https://meta-g.herokuapp.com/public/dashboard/7431c8e3-542e-4d21-a664-1abeccbac880';
+	// var baseurl = 'https://meta-g.herokuapp.com/public/question/b71f7fda-4dfd-419e-b4ff-1b3418d1c147'
+	var selectedCampaign = '';
+	var selectedUser = '';
+	var newurl = '';
+	var newesturl = '';
+	$scope.url = '';
+	
+
 
 	// How to add option to beginning of dropdown menu
 	 // var select = $document[0].getElementById('1-100');
@@ -298,55 +344,37 @@ function mainController($scope, $http, $sce, $document){
 	};
 
 
-	// Populate client's campaigns in the dropdown
-	$http.get('/api/campaigns')
-		.success(function(data){
-			$scope.campaigns = data;
-			console.log('These are the camapaigns: ',data)
+});	
+
+
+function socialController($scope, $http, $sce, $document){
+
+	$scope.formData = {};
+
+	// Hiç bir şeye basılmadığında yani direk site açılğında router.js içerisine direk get methoduna gidiyor . 
+	$http.get('/api/todos')
+		.success(function(data) {
+			$scope.gonderi = data;
+			console.log($scope.gonderi.length,'veri geldi')
+		})
+		.error(function(data) {
+			console.log('Error: ' + data);
+		});
+
+
+
+	$scope.createTodo = function() { 
+		$http.post('/api/todos', $scope.formData)
+			.success(function(data) {
+				$scope.formData = {}; // clear the form so our user is ready to enter another
+				$scope.gonderi = data;
+				console.log(data);
 			})
-			.error(function(data){
+			.error(function(data) {
+				console.log('Error: ' + data);
 			});
-
-	// Change the iframe based on the user's selected 'Past X Days'
-
-	$scope.daySelected = function() {
-		// var selectedUser = $scope.selectedUser;
-		console.log('you ran the daySelected function');
-		updateIframe();
 	};
-
-
-	// Change the iframe based on the user's selected LinkedIn user
-
-	$scope.userSelected = function() {
-		// var selectedUser = $scope.selectedUser;
-		console.log('you ran the userSelected function');
-		updateIframe();
-	};
-
-
-
-	// Change the iframe based on the user's selected campaigns
-
-	$scope.campaignSelected = function() {
-		  // var selectedCampaign = $scope.selectedCampaign;
-		  console.log('you ran the campaignSelected function');
-		  updateIframe();	       		
-	};
-
 	
-
-	// Populate client's LinkedIn users in the dropdown
-	$http.get('/api/users')
-		.success(function(data){
-			$scope.users = data;
-
-			console.log("hey from users function in core.js!")
-			console.log('These are the users: ',data)
-			})
-			.error(function(data){
-			});
-
 
 
 	
