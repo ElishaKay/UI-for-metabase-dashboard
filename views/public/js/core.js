@@ -22,24 +22,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
     url: '/list2',
     templateUrl: 'home-list2.html',
   })
-  // .state('beer', {
-  //     url: '/beers/:id', 
-  //     controller: 'BeersCtrl',
-  //     templateUrl: 'beer.html'
-  // })
-  // .state('scotch', {
-  //   url: '/scotch/:scotch',
-  //   templateUrl: function ($stateParams){
-  //     console.log($stateParams)
-  //     return 'partial-scotch-' + $stateParams.scotch + '.html';
-  //   }
-  // })
-
-
+    .state('home.dashboard', {
+    url: '/dashboard',
+    templateUrl: 'dashboard.ejs',
+  })
 });
 
-// end of router
-// Beginning of controller
 
 
 
