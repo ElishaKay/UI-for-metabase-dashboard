@@ -34,6 +34,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
 // function mainController($scope, $http, $sce, $document){
 function statsController($scope, $http, $sce, $document){
 	
+	  $http.get('/api/intercom')
+		.success(function(data){
+			$scope.intercom = data;
+			console.log('This is the object from intercom: ',data)
+		})
+		.error(function(data){
+	  });
+
       $http.get('/api/messageStats')
         .success(function(data) {
             var datesArray = new Array;
