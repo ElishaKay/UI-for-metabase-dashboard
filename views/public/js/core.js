@@ -442,8 +442,6 @@ function socialController($scope, $http, $sce, $document){
 				console.log('Error: ' + data);
 			});
 	};
-	
-
-
 };
+
 
