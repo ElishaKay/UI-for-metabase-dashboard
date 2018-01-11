@@ -31,8 +31,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
 
 
-// function mainController($scope, $http, $sce, $document){
-function statsController($scope, $http, $sce, $document){
+function statsController($scope, $http, $sce){
 	
 	  $http.get('/api/intercom')
 		.success(function(data){
@@ -91,8 +90,7 @@ function statsController($scope, $http, $sce, $document){
 };
 
 
-// app.controller('dashboardController', ['dropdownService', function (dropdownService, $scope, $http, $sce, $document){
-app.controller('dashboardController', function ($scope, $http, $sce, $document){	
+app.controller('dashboardController', function ($scope, $http, $sce, dropdownFactory){	
 
 	// Creating the initial iframe on page load
 	 	$(function(){
@@ -192,15 +190,6 @@ app.controller('dashboardController', function ($scope, $http, $sce, $document){
 	var newurl = '';
 	var newesturl = '';
 	$scope.url = '';
-	
-
-
-	// How to add option to beginning of dropdown menu
-	 // var select = $document[0].getElementById('1-100');
- 	//  var opt = new Option('All Time', 'my-option');
- 	//  select.insertBefore(opt, select.firstChild);
- 	//  select.prepend("<option value='' disabled selected>Choose Time</option>");
-
 
 	$http.get('/api/user')
 		.success(function(data){
@@ -445,3 +434,7 @@ function socialController($scope, $http, $sce, $document){
 };
 
 
+app.factory('dropdownFactory', ['$http', function($http){
+	console.log('instantiating dropdownFactory');
+
+}]);

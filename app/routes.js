@@ -71,16 +71,7 @@ module.exports = function(app,passport) {
             console.log(d);
             res.json(d);
         });
-
-        // connection.query('select * from campaign where client_id = ?',[req.user.client_id], function (err, rows) {
-            
-        //     res.json(rows);
-        // });
-      
     });
-     //Intercom stuff:
-        
-
 
            // Get row for the logged in user (i.e. client)
     app.get('/api/user',isLoggedIn,function(req,res){
