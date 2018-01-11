@@ -1,0 +1,64 @@
+works almost perfect
+
+    $http.get('/api/messageStats')
+        .success(function(data) {
+            var datesArray = new Array;
+                for(var i in data) {
+                    datesArray.push(data[i].message_date);
+            };
+            console.log('this is the dates Array', datesArray);
+
+            $scope.labels = datesArray;
+            $scope.series = ['Invites', 'Followups'];
+            
+            $scope.stats = data;
+            
+            var invitesArray = new Array;
+                for(var i in data) {
+                    invitesArray.push(data[i].invites);
+            };
+            var followupsArray = new Array;
+                for(var i in data) {
+                    followupsArray.push(data[i].followups);
+            };
+            console.log('these are the stats',data);
+            console.log('This is the array with # of invites per day',invitesArray);
+            console.log('This is the array with # of followups per day',followupsArray);
+            
+            var combinedArray = [invitesArray, followupsArray];
+            console.log('this is the combinedArray',combinedArray);
+            
+            $scope.data = combinedArray;
+
+
+
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
+
+
+
+-------------------
+
+var combinedArray = invitesArray.map(function(v,i) {
+    return [v, followupsArray[i]];
+});
+console.log(combinedArray);
+
+
+
+
+select  date(message.message_sent_date) as message_date, 
+        count(case when message_type = 'invite' then 1 else null end) as invites, 
+        count(case when message_type = 'message' then 1 else null end) as followups, 
+        count(case when message_type = 'second_message' then 1 else null end) as second_followups,
+        count(case when message_type = 'response' then 1 else null end) as responses
+from client cl
+inner join campaign c on (c.client_id = cl.client_id)
+inner join user u on (u.client_id = c.client_id)
+inner join campaign_user cu on (u.user_id = cu.user_id and cu.campaign_id = c.campaign_id)
+inner join message as message on (u.user_id = message.user_id and message.campaign_id = cu.campaign_id)
+inner join receiver r on (r.receiver_id = message.receiver_id)
+where cl.client_analytics_code = ? and cl.client_analytics_code is not null
+group by date(message.message_sent_date), message.message_type

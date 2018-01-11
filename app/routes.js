@@ -4,9 +4,12 @@ var connection = mysql.createConnection(dbconfig.connection);
 var bcrypt = require('bcrypt-nodejs');
 var bodyParser = require('body-parser');
 var urlencodedparser = bodyParser.urlencoded({extended:false})
-
+var Intercom = require('intercom-client');
+var client = new Intercom.Client({ token: process.env.TOKEN });
 
 module.exports = function(app,passport) {
+
+
 
       app.get('/',isLoggedIn,function(req,res){
         res.render('index.ejs'); 
@@ -57,6 +60,17 @@ module.exports = function(app,passport) {
             res.json(rows);
         });
       
+    });
+
+         // Get all campaigns
+     app.get('/api/intercom',isLoggedIn,function(req,res){
+ 
+        // client.users.list(function (d) {
+            client.admins.list(function (d) {
+         // d is the response from the server
+            console.log(d);
+            res.json(d);
+        });
     });
 
            // Get row for the logged in user (i.e. client)
