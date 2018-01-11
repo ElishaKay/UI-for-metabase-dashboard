@@ -11,7 +11,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
   // First Page
   $stateProvider.state('home', {
     url: '/home',
-    templateUrl: 'ui-navbar.ejs'
+    templateUrl: 'ui-navbar.ejs',
+    controller: 'dashboardController'
   })
   .state('home.stats', {
   	url: '/stats',
@@ -24,8 +25,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   })
     .state('home.dashboard', {
     url: '/dashboard',
-    templateUrl: 'dashboard.ejs',
-    controller: 'dashboardController'
+    templateUrl: 'dashboard.ejs'
   })
 });
 
@@ -92,6 +92,15 @@ function statsController($scope, $http, $sce){
 
 app.controller('dashboardController', function ($scope, $http, $sce, dropdownFactory){	
 
+	// Populate client's campaigns in the dropdown
+	$http.get('/api/campaigns')
+		.success(function(data){
+			$scope.campaigns = data;
+			console.log('These are the camapaigns: ',data)
+		})
+		.error(function(data){
+	});
+
 	// Creating the initial iframe on page load
 	 	$(function(){
     var $select = $(".1-100");
@@ -133,15 +142,6 @@ app.controller('dashboardController', function ($scope, $http, $sce, dropdownFac
 	$scope.resetDay = function(){
         delete $scope.selectedDay;
 	};
-
-	// Populate client's campaigns in the dropdown
-	$http.get('/api/campaigns')
-		.success(function(data){
-			$scope.campaigns = data;
-			console.log('These are the camapaigns: ',data)
-		})
-		.error(function(data){
-	});
 
 	// Change the iframe based on the user's selected 'Past X Days'
 	$scope.daySelected = function() {

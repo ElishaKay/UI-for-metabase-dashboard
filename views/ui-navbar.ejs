@@ -1,3 +1,45 @@
+
+
+<div class="col-sm-3">
+<div class="form-group">
+<button ng-click="resetCampaign()">Reset</button>
+<select class="form-control input-lg" ng-change="campaignSelected()" ng-model="selectedCampaign">
+<option value="" disabled selected>Choose Campaign</option>
+<option ng-repeat="campaign in campaigns" value="{{campaign.campaign_name}}">{{campaign.campaign_name}}</option>
+</select>
+<!-- <p>selected campaign is: {{selectedCampaign}}</p> -->
+</div>
+</div>
+       
+
+          
+<div class="col-sm-3">
+<div class="form-group">
+<button ng-click="resetUser()">Reset</button>
+<select class="form-control input-lg" ng-change="userSelected()" ng-model="selectedUser">
+<option value="" disabled selected>Choose User</option>
+<option ng-repeat="user in users" value="{{user.fullname}}">{{user.fullname}}</option>
+</select>
+<!-- <p>selected user is: {{selectedUser}}</p> -->
+</div>
+</div>
+
+<!-- Choose past X days -->
+<div class="col-sm-3">
+<div class="form-group">
+<button ng-click="resetDay()">Reset</button>
+<select id="1-100" class="1-100 form-control input-lg" ng-change="daySelected()" ng-model="selectedDay">
+  <option value="" disabled selected>Choose Time</option>
+</select>
+</div>
+</div>
+</div>
+<center><button type="button" class="btn btn-primary btn-lg" ng-click="updateIframe()">Fetch My Data</button>
+</center>                     
+<!--  {{users}}      -->          
+             
+
+
 <div class="row">
 	<div class="col-sm-12">
 
